@@ -1,8 +1,11 @@
 #include<iostream>
 #include<cmath>
+#include <chrono>
+using namespace std::chrono;
 using namespace std;
     int max(int a,int b)
     {
+   
       if(a>b)
         return a;
       else
@@ -38,10 +41,16 @@ using namespace std;
   }
   int main()
   {
+   auto start = high_resolution_clock::now();
     int scor[] = {3, 15, 2, 10, 12, 5, 2, 23};
     int n= 8;
     int h= log2(n);
     int a= decide(0,0,true,scor,h);
     cout<<a;
-    return 0;
+   
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+
+    cout << "Compilation Time: " << duration.count() << " milliseconds" << endl;
+     return 0;
   }
