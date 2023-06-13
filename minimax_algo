@@ -46,7 +46,7 @@ using namespace std;
     int n= 8;
     int h= log2(n);
     int a= decide(0,0,true,scor,h);
-    cout<<a;
+    cout<<a<<endl;
    
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
