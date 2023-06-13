@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+pair<int, int> findNashEquilibrium(const vector<vector<int>>& payoffMatrix1, const vector<vector<int>>& payoffMatrix2) {
+    int numRows = payoffMatrix1.size();
+    int numCols = payoffMatrix1[0].size();
+
+    vector<int> maxRowValues(numRows, INT_MIN);
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+            maxRowValues[i] = max(maxRowValues[i], payoffMatrix1[i][j]);
+        }
+    }
+
+    vector<int> minColValues(numCols, INT_MAX);
+    for (int j = 0; j < numCols; j++) {
+        for (int i = 0; i < numRows; i++) {
+            minColValues[j] = min(minColValues[j], payoffMatrix2[i][j]);
+        }
+    }
+
+    pair<int, int> equilibrium(-1, -1);
+    int maxRowValue = INT_MIN;
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+            if (payoffMatrix1[i][j] == maxRowValues[i] && payoffMatrix2[i][j] == minColValues[j]) {
+                if (payoffMatrix1[i][j] > maxRowValue) {
+                    maxRowValue = payoffMatrix1[i][j];
+                    equilibrium = make_pair(i, j);
+                }
+            }
+        }
+    }
+
+    return equilibrium;
+}
+
+vector<int> commaSeparatedStringToIntVector(const string &s) {
+    vector<int> result;
+    istringstream iss(s);
+    string token;
+    while (getline(iss, token, ',')) {
+        result.push_back(stod(token));
+    }
+    return result;
+}
+
+vector<vector<int>> take_input(){
+    vector<vector<int>> A;
+    int b=0;
+    string s="";
+    cout << "Insert the number of rows of player's payoff matrix: " << endl;
+    cin >> b;
+    cin.ignore();
+    for (int i =0; i<b;i++){
+        cout << "Insert the "<< i+1 << " numbered row of payoff matrix (ex. ' 3 , 1 ,  2 ') " << endl;
+        getline(cin, s);
+        A.push_back(commaSeparatedStringToIntVector(s));
+    }
+    return A;
+}
+
+int main() {
+    vector<vector<int>> A, B;
+
+
+    cout << "Would you like to enter payoff matrix, or use the given input?\nGive input - press 1\nUse given input - press 2" << endl;
+    int a;
+    cin >> a;
+    if (a==1){
+        cout << "Player 1: " << endl;
+        A = take_input();
+        cout << "Player 2: " << endl;
+        B = take_input();
+        pair<int, int> equilibrium = findNashEquilibrium(A, B);
+        cout << "Nash Equilibrium: (" << equilibrium.first << ", " << equilibrium.second << ")" << endl;
+    }
+    else if (a==2){
+        vector<vector<int>> payoffMatrix1 = {{3, 2, 4}, {1, 6, 0}, {5, 3, 2}};
+        vector<vector<int>> payoffMatrix2 = {{2, 5, 1}, {3, 2, 4}, {0, 2, 6}};
+        pair<int, int> equilibrium = findNashEquilibrium(payoffMatrix1, payoffMatrix2);
+        cout << "Player 1: \n3 2 4\n1 6 0\n5 3 2\nPlayer 2: \n2 5 1\n3 2 4\n0 2 6\nNash Equilibrium: (" << equilibrium.first << ", " << equilibrium.second << ")" << endl;
+    }
+    else {
+        cout << "Invalid input" << endl;
+        main();
+    }
+
+    return 0;
+}
